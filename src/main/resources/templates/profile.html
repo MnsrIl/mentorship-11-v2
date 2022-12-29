@@ -1,0 +1,28 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <title th:text="${user.getName()} + '\'s Information'"/>
+</head>
+<body>
+<div th:replace="fragments/header :: authorized_info (${authenticatedUser})" />
+<div>
+    <img style="width: 20%;" th:src="${user.getAvatarURL()}" alt="preview"/>
+    <div th:text="${authenticatedUser.hasRole('ROLE_ADMIN')} ? ('User - ' + ${user.getUsername()} + '#' + ${user.getId()}) : 'About me: '"/>
+    <div th:if="${authenticatedUser.getId().equals(user.getId())}" th:text="'I\'m ' + ${user.getName()}" />
+    <p th:text="'I\'m ' + ${user.getAge()} + ' years old. I\'m professional ' + ${user.getProfession()} + '.'"/>
+    <div th:text="'And I am' + (${user.isHasBrains()} ? ' not so' : '')  + ' smart'"/>
+    <div th:if="${authenticatedUser.hasRole('ROLE_ADMIN')}">
+        <a href="/admin">Go Back</a>
+        <a th:href="@{/admin/edit/{id}(id=${user.getId()})}">Edit</a>
+        <form th:method="POST" th:action="@{/admin/delete/{id}(id=${user.getId()})}">
+            <button
+                    style="color: red"
+                    onclick="return confirm('Are you sure?')"
+                    type="submit">
+                Delete
+            </button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

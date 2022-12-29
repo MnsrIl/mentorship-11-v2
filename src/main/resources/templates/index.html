@@ -1,11 +1,29 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
-    <title>Spring Security Example</title>
+    <meta charset="UTF-8">
+    <title>Users List</title>
 </head>
 <body>
-<h1>Welcome to Index PAGE!</h1>
+<div th:replace="fragments/header :: authorized_info (${authenticatedUser})" />
+<div>
+    <h3 th:if="${users.size() <= 0}">
+        There isn't any user yet, but...
+        you can <a href="/admin/create">create</a> one
+    </h3>
+    <th:block th:if="${users.size() > 0}" th:each="user : ${users}">
+        <img style="width: 12%;
+        border: 3px solid #a28b8b;
+        border-radius: 24px;"
+             th:src="${user.getAvatarURL() != null && !user.getAvatarURL().isEmpty() ? user.getAvatarURL() : ''}"
+             alt="user profile avatar">
+        <div th:text="'I\'m ' + ${user.getName()}"/>
+        <a th:href="@{/admin/details/{id}(id=${user.getId()})}">-> More... <-</a>
+        <hr>
+    </th:block>
+    <a href="/admin/create" th:if="${users.size() > 0}">Create New User</a>
 
-
+</div>
 </body>
 </html>

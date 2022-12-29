@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;" charset="UTF-8">
+    <title th:text="${isCreate ? 'Create User' : 'Edit ' + user.getName()}"/>
+</head>
+<body>
+<div th:replace="fragments/header :: authorized_info (${authenticatedUser})" />
+<form
+        th:method="POST"
+        th:action="${isCreate} ? '/admin/create' : '/admin/edit/' + ${user.getId()}"
+        th:object="${user}"
+        style="display: flex; flex-direction: column; width: fit-content">
+    <input placeholder="Avatar URL" th:field="*{avatarURL}">
+    <input placeholder="username" th:field="*{username}">
+    <input placeholder="password" th:field="*{password}">
+    <input id="name-input" placeholder="Name" min="3" maxlength="50" th:field="*{name}">
+    <input placeholder="Profession" maxlength="255" th:field="*{profession}">
+    <input placeholder="Age" type="number" max="100" min="1" th:field="*{age}">
+    <br />
+    <label for="hasBrains">
+        Have brains? <input id="hasBrains" type="checkbox" th:field="*{hasBrains}">
+    </label>
+    <br/>
+    <label for="selected_roles">
+        Roles:
+    </label>
+    <select id="selected_roles" size="2" multiple name="selected_roles" required="required">
+        <option th:each="role: ${roles}"
+                th:value="${role.getId()}"
+                th:text="${role.getAuthority().toLowerCase().replace('role_', '')}"
+                th:selected="${role.getAuthority() == 'ROLE_USER' || user.hasRole(role.getAuthority())}"
+        />
+    </select>
+
+    <br>
+    <div style="display: flex; justify-content: space-between">
+        <a th:href="${isCreate} ? '/admin' : '/admin/details/' + ${user.getId()}">Go Back</a>
+        <button
+                type="submit"
+                style="width: 60px"
+                th:text="${isCreate ? 'Create' : 'Edit'}"
+        />
+    </div>
+</form>
+
+</body>
+</html>

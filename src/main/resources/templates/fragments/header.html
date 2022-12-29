@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<header
+        style="border-bottom: 2px solid #95b6ff;text-align: center;margin: 16px;"
+        th:fragment="authorized_info (user)">
+    <ul style="list-style: none; display: flex; justify-content: space-between">
+        <li th:text="'Logged User: ' + ${user.getName()}"/>
+        <li th:text="'Roles: ' + ${user.getAuthorities()}"/>
+        <li>
+            <form style="margin: 0" method="get" th:action="@{/logout}">
+                <button type="submit">
+                    Logout
+                </button>
+            </form>
+        </li>
+    </ul>
+</header>
+</body>
+</html>
