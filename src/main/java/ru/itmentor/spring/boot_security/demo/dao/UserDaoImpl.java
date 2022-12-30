@@ -59,10 +59,10 @@ public class UserDaoImpl implements UserDao {
 
     @Transactional(readOnly = true)
     @Override
-    public User getUserByUsername(String username) {
+    public User getUserByUsername(String email) {
         return entityManager
-                .createQuery("select u from User u where u.username =: username", User.class)
-                .setParameter("username", username)
+                .createQuery("select u from User u where u.email =: email", User.class)
+                .setParameter("email", email)
                 .getSingleResult();
     }
 }

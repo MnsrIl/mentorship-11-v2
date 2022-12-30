@@ -31,6 +31,9 @@ public class UserServiceImpl implements UserService {
     public void updateUser(User user) {
         User realUser = userRepository.getUserById(user.getId());
 
+        if (user.getPassword() == null || user.getPassword().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(realUser.getPassword()));
+        }
         if (!Objects.equals(realUser.getPassword(), user.getPassword())) {
             String encodedPassword = passwordEncoder.encode(user.getPassword());
             user.setPassword(encodedPassword);

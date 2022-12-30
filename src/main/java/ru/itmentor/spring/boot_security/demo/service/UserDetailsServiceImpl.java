@@ -16,11 +16,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private UserDao userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserDetails userDetails = userRepository.getUserByUsername(username);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        UserDetails userDetails = userRepository.getUserByUsername(email);
 
         if (userDetails == null)
-            throw new UsernameNotFoundException(username);
+            throw new UsernameNotFoundException(email);
 
         return userDetails;
     }

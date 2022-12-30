@@ -12,9 +12,8 @@ public class UserController {
     public String getUserPage(ModelMap modelMap) {
         User authenticatedUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        modelMap.addAttribute("user", authenticatedUser);
         modelMap.addAttribute("authenticatedUser", authenticatedUser);
 
-        return "profile";
+        return "user-page";
     }
 }

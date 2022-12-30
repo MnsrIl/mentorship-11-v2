@@ -1,6 +1,5 @@
 package ru.itmentor.spring.boot_security.demo.model;
 
-import org.hibernate.validator.constraints.URL;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -16,12 +15,16 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
-    @Size(min = 3, max = 50, message = "Name length should be between 3 and 50 characters")
-    private String name;
+    @Column(name = "first_name")
+    @Size(min = 3, max = 50, message = "First Name length should be between 3 and 50 characters")
+    private String firstName;
 
-    @Column(name = "username", unique = true)
-    private String username;
+    @Column(name = "last_name")
+    @Size(min = 3, max = 50, message = "Last Name length should be between 3 and 50 characters")
+    private String lastName;
+
+    @Column(name = "email", unique = true)
+    private String email;
 
     @Column(name = "password")
     private String password;
@@ -33,30 +36,17 @@ public class User implements UserDetails {
     )
     private Set<Role> roles = new HashSet<>();
 
-    @Column(name = "profession")
-    private String profession;
-
-    @Column(name = "avatar_url")
-    @URL(message = "Provide valid avatar URL")
-    private String avatarURL;
-
-    @Column(name = "smart")
-    private boolean hasBrains = false;
-
     @Column(name = "age")
-    @Min(value = 1, message = "Minimal age is 1")
     private int age;
 
     public User() {
     }
 
-    public User(Set<Role> roles, String name, String profession, String avatarURL, boolean hasBrains, int age) {
-        this.name = name;
+    public User(Set<Role> roles, String lastName, String firstName, int age) {
         this.roles.addAll(roles);
-        this.profession = profession;
-        this.hasBrains = hasBrains;
         this.age = age;
-        this.avatarURL = avatarURL;
+        this.lastName = lastName;
+        this.firstName = firstName;
     }
 
     @Override
@@ -69,16 +59,12 @@ public class User implements UserDetails {
         return password;
     }
 
-    public void setPassword(String password) { this.password = password; }
-
     @Override
     public String getUsername() {
-        return username;
+        return email;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    public void setPassword(String password) { this.password = password; }
 
     public boolean hasRole(String role) {
         return getAuthorities().stream().anyMatch(authority -> Objects.equals(authority.getAuthority(), role));
@@ -116,36 +102,28 @@ public class User implements UserDetails {
         this.roles.addAll(List.of(roles));
     }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getProfession() {
-        return profession;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setProfession(String profession) {
-        this.profession = profession;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
-    public String getAvatarURL() {
-        return avatarURL;
+    public String getEmail() {
+        return email;
     }
 
-    public void setAvatarURL(String avatarURL) {
-        this.avatarURL = avatarURL;
-    }
-
-    public boolean isHasBrains() {
-        return hasBrains;
-    }
-
-    public void setHasBrains(boolean hasBrains) {
-        this.hasBrains = hasBrains;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public int getAge() {
@@ -158,7 +136,7 @@ public class User implements UserDetails {
 
     @Override
     public String toString() {
-        String pattern = "Пользователь - '%s', id - %s\nПрофессия - '%s'\nУмный? - %s\nВозраст - %d\nСтеснительный? - %s}";
-        return String.format(pattern, name, id, profession, hasBrains ? "yes" : "not much", age, avatarURL == null || avatarURL.isEmpty() ? "yes" : "вряд ли");
+        String pattern = "Пользователь - '%s', id - %s\nИмя - '%s'\nФамилия - %s\nВозраст - %d";
+        return String.format(pattern, email, id, firstName, lastName, age);
     }
 }

@@ -30,49 +30,10 @@ public class AdminController {
 
         modelMap.addAttribute("authenticatedUser", authenticatedUser);
         modelMap.addAttribute("users", userService.getUsers());
-        return "index";
-    }
-
-    @GetMapping("/create")
-    public String getCreatePage(ModelMap modelMap) {
-        User authenticatedUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        modelMap.addAttribute("authenticatedUser", authenticatedUser);
-        modelMap.addAttribute("isCreate", true);
+        modelMap.addAttribute("roles", roleService.findAllRoles());
         modelMap.addAttribute("user", new User());
-        modelMap.addAttribute("roles", roleService.findAllRoles());
 
-        return "create";
-    }
-
-    @GetMapping("/edit/{id}")
-    public String getEditPage(
-            @PathVariable("id") Long id,
-            ModelMap modelMap
-    ) {
-        String redirectNotExistsTo = "/admin";
-        User user = userService.getUserById(id);
-        User authenticatedUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        if (user == null) return "redirect:" + redirectNotExistsTo;
-
-        modelMap.addAttribute("isCreate", false);
-        modelMap.addAttribute("user", user);
-        modelMap.addAttribute("authenticatedUser", authenticatedUser);
-        modelMap.addAttribute("roles", roleService.findAllRoles());
-
-        return "create";
-    }
-
-    @GetMapping("/details/{id}")
-    public String getUserInfoPage(@PathVariable("id") Long id, ModelMap modelMap) {
-        User user = userService.getUserById(id);
-        User authenticatedUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        modelMap.addAttribute("user", user);
-        modelMap.addAttribute("authenticatedUser", authenticatedUser);
-
-        return "profile";
+        return "admin-page";
     }
 
     @PostMapping("/delete/{id}")
@@ -84,10 +45,10 @@ public class AdminController {
 
     @PostMapping("/create")
     public String createNewUser(
-            @RequestParam("selected_roles") ArrayList<Long> selectedRolesID,
+            @RequestParam("form_selected_roles") ArrayList<Long> selectedRolesID,
             @ModelAttribute("user") @Valid User user, BindingResult bindingResult
     ) {
-        String redirectTo = "/admin/create";
+        String redirectTo = "/admin";
 
         if (!bindingResult.hasErrors()) {
             user.addAuthorities(roleService.findRolesByIDs(selectedRolesID));
@@ -99,10 +60,9 @@ public class AdminController {
         return "redirect:" + redirectTo;
     }
 
-    @PostMapping("/edit/{id}")
+    @PostMapping("/edit")
     public String editUser(
-            @PathVariable("id") Long id,
-            @RequestParam("selected_roles") ArrayList<Long> selectedRolesID,
+            @RequestParam("form_selected_roles") ArrayList<Long> selectedRolesID,
             @ModelAttribute("user") @Valid User user,
             BindingResult bindingResult
     ) {
@@ -111,8 +71,6 @@ public class AdminController {
         if (!bindingResult.hasErrors()) {
             user.addAuthorities(roleService.findRolesByIDs(selectedRolesID));
             userService.updateUser(user);
-
-            redirectTo = "redirect:/admin/details/" + id;
         }
 
         return redirectTo;
