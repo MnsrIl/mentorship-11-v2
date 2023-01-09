@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>SSG</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+    <script type="text/javascript" src="/scripts/store.js"></script>
+    <script type="text/javascript" src="/index.js"></script>
+    <script type="text/javascript" src="/scripts/loadUsers.js"></script>
+    <script type="text/javascript" src="/scripts/authorizeUser.js"></script>
+    <script type="text/javascript" src="/scripts/configureEditingModal.js"></script>
+    <script type="text/javascript" src="/scripts/configureDeletingModal.js"></script>
+    <script type="text/javascript" src="/scripts/configureCreatingForm.js"></script>
+</head>
+<body style="background: #f8f9fa">
+
+<!-- Edit Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalCenterTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLongTitle">Edit user</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editForm" action="http://localhost:8080/api/admin/edit"
+                      class="g-3 needs-validation container text-center fw-bold" novalidate>
+                    <div class="row justify-content-center">
+                        <div class="col-md-8">
+                            <label for="editFormId">ID</label>
+                            <input name="id" type="text" class="form-control" id="editFormId" disabled>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-md-8 gy-3">
+                            <label for="editFormFirstName">First name</label>
+                            <input name="firstName" type="text" class="form-control" id="editFormFirstName">
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-md-8 gy-3">
+                            <label for="editFormLastName">Last name</label>
+                            <input name="lastName" type="text" class="form-control" id="editFormLastName">
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-md-8 gy-3">
+                            <label for="editFormAge">Age</label>
+                            <input name="age" type="number" class="form-control" id="editFormAge">
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-md-8 gy-3">
+                            <label for="editFormEmail">Email</label>
+                            <input name="email" type="text" class="form-control" id="editFormEmail">
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-md-8 gy-3">
+                            <label for="editFormPassword">Password</label>
+                            <input name="password" type="password" class="form-control" id="editFormPassword">
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-md-8 gy-3">
+                            <label for="editFormRole">Role</label>
+                            <select name="roles" multiple size="2" class="form-select" id="editFormRole" required>
+                                <option value="1">User</option>
+                                <option value="2">Admin</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                Please select a role.
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="edit_btn_close" type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                        aria-label="Close">
+                    Close
+                </button>
+                <button id="edit_btn_submit" type="submit" class="btn btn-primary" form="editForm">Edit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalCenterTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLongTitle">Delete user</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="deleteForm" class="g-3 container text-center fw-bold" novalidate>
+                    <div class="row justify-content-center">
+                        <div class="col-md-8">
+                            <label for="deleteFormId">ID</label>
+                            <input name="id" type="text" class="form-control" id="deleteFormId" disabled>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-md-8 gy-3">
+                            <label for="deleteFormFirstName">First name</label>
+                            <input name="firstName" type="text" class="form-control" id="deleteFormFirstName" disabled>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-md-8 gy-3">
+                            <label for="deleteFormLastName">Last name</label>
+                            <input name="lastName" type="text" class="form-control" id="deleteFormLastName" disabled>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-md-8 gy-3">
+                            <label for="deleteFormAge">Age</label>
+                            <input name="age" type="number" class="form-control" id="deleteFormAge" disabled>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-md-8 gy-3">
+                            <label for="deleteFormEmail">Email</label>
+                            <input name="email" type="text" class="form-control" id="deleteFormEmail" disabled>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-md-8 gy-3">
+                            <label for="deleteFormRoles">Role</label>
+                            <select multiple size="2" class="form-select" id="deleteFormRoles" disabled></select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="delete_btn_close" type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                        aria-label="Close">Close
+                </button>
+                <button id="delete_btn_submit" type="button" class="btn btn-danger">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Header -->
+<header id="header" class="bg-dark p-3 text-white d-flex justify-content-between">
+    <div id="header_user-info">
+        <b id="header_user-email"></b> with roles:&nbsp;
+    </div>
+    <a href="/logout" class="bg-transparent text-muted border-0 text-decoration-none">Logout</a>
+</header>
+<main style="height: calc(100vh - 58px)" class="d-flex">
+    <div class="w-100 d-flex align-items-start">
+        <div style="width: 15%;" class="nav h-100 pt-4 bg-white flex-column nav-pills" id="v-pills-tab" role="tablist"
+             aria-orientation="vertical">
+            <button class="nav-link text-start visually-hidden" id="v-pills-admin-tab" data-bs-toggle="pill"
+                    data-bs-target="#v-pills-admin"
+                    type="button" role="tab" aria-controls="v-pills-admin" aria-selected="false">
+                Admin
+            </button>
+            <button class="nav-link text-start" id="v-pills-user_details-tab" data-bs-toggle="pill"
+                    data-bs-target="#v-pills-user_details"
+                    type="button" role="tab" aria-controls="v-pills-user_details" aria-selected="false">
+                User
+            </button>
+        </div>
+        <div style="flex: 1" class="tab-content p-4" id="v-pills-tabContent">
+            <!-- Admin Page-->
+            <div class="tab-pane fade" id="v-pills-admin" role="tabpanel"
+                 aria-labelledby="v-pills-admin-tab">
+                <h1>Admin panel</h1>
+                <nav>
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="all-users-tab" data-bs-toggle="tab"
+                                    data-bs-target="#all-users" type="button" role="tab" aria-controls="all-users"
+                                    aria-selected="true">Users Table
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="create-user-tab" data-bs-toggle="tab"
+                                    data-bs-target="#create-user" type="button" role="tab" aria-controls="create-user"
+                                    aria-selected="false">New User
+                            </button>
+                        </li>
+                    </ul>
+                </nav>
+                <div class="tab-content" id="myTabContent">
+                    <!-- Users List -->
+                    <div class="tab-pane fade show active" id="all-users" role="tabpanel"
+                         aria-labelledby="all-users-tab">
+                        <h5 class="p-3 mb-0 border-1 border">All users</h5>
+                        <section class="p-3 bg-white">
+                            <table class="table align-middle table-striped">
+                                <tbody id="users-table-body">
+                                <tr></tr>
+                                <tr class="border-top table-cell-padding-y-2">
+                                    <th scope="col">ID</th>
+                                    <th scope="col">First Name</th>
+                                    <th scope="col">Last Name</th>
+                                    <th scope="col">Age</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Role</th>
+                                    <th scope="col">Edit</th>
+                                    <th scope="col">Delete</th>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </section>
+                    </div>
+                    <!-- Create New User -->
+                    <div class="tab-pane fade" id="create-user" role="tabpanel" aria-labelledby="create-user-tab">
+                        <h5 class="p-3 mb-0 border-1 border">Add new user</h5>
+                        <section class="p-3 bg-white">
+                            <div class="container col-5">
+                                <form id="createForm" method="post" action="http://localhost:8080/api/admin/create"
+                                      class="g-3 needs-validation container text-center fw-bold"
+                                      novalidate>
+                                    <div class="row justify-content-center">
+                                        <div class="col-md-8 gy-3">
+                                            <label for="validationCreateFirstName">First name</label>
+                                            <input name="firstName" type="text" class="form-control"
+                                                   id="validationCreateFirstName">
+                                        </div>
+                                    </div>
+                                    <div class="row justify-content-center">
+                                        <div class="col-md-8 gy-3">
+                                            <label for="validationCreateLastName">Last name</label>
+                                            <input name="lastName" type="text" class="form-control"
+                                                   id="validationCreateLastName">
+                                        </div>
+                                    </div>
+                                    <div class="row justify-content-center">
+                                        <div class="col-md-8 gy-3">
+                                            <label for="validationCreateAge">Age</label>
+                                            <input name="age" type="number" class="form-control"
+                                                   id="validationCreateAge" required>
+                                        </div>
+                                    </div>
+                                    <div class="row justify-content-center">
+                                        <div class="col-md-8 gy-3">
+                                            <label for="validationCreateEmail">Email</label>
+                                            <input name="email" type="text" class="form-control"
+                                                   id="validationCreateEmail">
+                                        </div>
+                                    </div>
+                                    <div class="row justify-content-center">
+                                        <div class="col-md-8 gy-3">
+                                            <label for="validationCreatePassword">Password</label>
+                                            <input name="password" type="password" class="form-control"
+                                                   id="validationCreatePassword">
+                                        </div>
+                                    </div>
+                                    <div class="row justify-content-center">
+                                        <div class="col-md-8 gy-3">
+                                            <label for="validationCreateRole">Role</label>
+                                            <select name="roles" multiple size="2" class="form-select"
+                                                    id="validationCreateRole"
+                                                    required>
+                                                <option value="1" selected>User</option>
+                                                <option value="2">Admin</option>
+                                            </select>
+                                            <div class="invalid-feedback">
+                                                Please select a role.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-auto mt-3">
+                                        <button type="submit" class="btn btn-success">Add new user</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+            <!-- User Details Page -->
+            <div class="tab-pane fade" id="v-pills-user_details" role="tabpanel"
+                 aria-labelledby="v-pills-user_details-tab">
+                <h1>User information-page</h1>
+                <h5 class="p-3 mb-0 border-1 border">About user</h5>
+                <section class="p-3 bg-white">
+                    <table class="table align-middle table-striped">
+                        <tbody id="user-information_table-body">
+                        <tr></tr>
+                        <tr class="border-top table-cell-padding-y-2">
+                            <th scope="col">ID</th>
+                            <th scope="col">First Name</th>
+                            <th scope="col">Last Name</th>
+                            <th scope="col">Age</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Role</th>
+                        </tr>
+                        </tbody>
+                    </table>
+                </section>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

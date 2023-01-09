@@ -9,10 +9,10 @@
 		<relativePath/>
 	</parent>
 	<groupId>ru.itmentor</groupId>
-	<artifactId>spring-boot_security-demo</artifactId>
+	<artifactId>Task11</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>spring-boot_security-demo</name>
-	<description>Demo project for Spring Boot</description>
+	<name>Task11</name>
+	<description>Task 3.1.4</description>
 	<properties>
 		<java.version>11</java.version>
 	</properties>
@@ -47,6 +47,11 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.24</version>
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
